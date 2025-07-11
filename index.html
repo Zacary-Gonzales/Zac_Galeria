@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Galeria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffe6e6; 
+            padding: 20px;
+        }
+
+        .contenedor {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .encabezado {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .encabezado h1 {
+            color: #b30000; 
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .encabezado p {
+            color: #666;
+        }
+
+        .contenedor-formulario {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grupo-formulario {
+            margin-bottom: 15px;
+        }
+
+        .grupo-formulario label {
+            display: block;
+            margin-bottom: 5px;
+            color: #b30000; 
+            font-weight: bold;
+        }
+
+        .grupo-formulario input,
+        .grupo-formulario textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-agregar {
+            background: #b30000; 
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-agregar:hover {
+            background: #990000; 
+        }
+
+        .galeria {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .tarjeta-imagen {
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            flex: 1 1 calc(30% - 15px); 
+            max-width: calc(30% - 15px);
+        }
+
+        .tarjeta-imagen:hover{
+            box-shadow: 0px 0px 400px rgb(178, 45, 45);
+        }
+
+        .envoltura-imagen {
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .tarjeta-imagen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 2s ease; 
+        }
+
+        .tarjeta-imagen:hover{
+            transform: scale(1.05); 
+            box-shadow: 0 0 100px rgba(179, 0, 0, 0.5); 
+        }
+
+        .contenido-tarjeta {
+            padding: 15px;
+        }
+
+        .titulo-tarjeta {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #b30000; /* Tono rojo oscuro */
+            margin-bottom: 8px;
+        }
+
+        .descripcion-tarjeta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .btn-eliminar {
+            background: #dc3545; /* Botón rojo para eliminar */
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-eliminar:hover {
+            background: #c82333; /* Rojo más oscuro al pasar el mouse */
+        }
+
+        .estado-vacio {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            width: 100%;
+        }
+
+        .imagenes-predefinidas {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .btn-predefinido {
+            background: #28a745; /* Botón verde */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 3px;
+            cursor: pointer;
+        }
+
+        .btn-predefinido:hover {
+            background: #218838; /* Verde más oscuro al pasar el mouse */
+        }
+
+        .mensaje-error {
+            background: #69000b; /* Mensaje de error en rojo */
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .mensaje-exito {
+            background: #42ff6e; 
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .contenedor {
+                padding: 15px;
+            }
+            
+            .encabezado h1 {
+                font-size: 2em;
+            }
+            
+            .galeria {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tarjeta-imagen {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <div class="encabezado">
+            <h1>Galeria de Fotos Y Demas </h1>
+            <p>Ingresa todas las imagenes que desees.</p>
+        </div>
+
+        <div class="contenedor-formulario">
+            <div class="grupo-formulario">
+                <label for="urlImagen">URL imagen:</label>
+                <input type="url" id="urlImagen" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+
+            <div class="grupo-formulario">
+                <label for="tituloImagen">Título:</label>
+                <input type="text" id="tituloImagen" placeholder="Ingresa un título para la imagen">
+            </div>
+
+            <div class="grupo-formulario">
+                <label for="descripcionImagen">Descripción:</label>
+                <textarea id="descripcionImagen" placeholder="Describe la imagen..."></textarea>
+            </div>
+
+            <button class="btn-agregar" onclick="agregarImagen()">Agregar Imagen</button>
+
+            <div class="imagenes-predefinidas">
+                <p>O usa una imagen predefinida:</p>
+                <button class="btn-predefinido" onclick="agregarPredefinida('https://attachments-cdn-s.coub.com/coub_storage/coub/simple/cw_timeline_pic/93d6ada9054/2410e7eb2a9c015d9a3f8/ios_large_1632758925_image.jpg', 'Dwayne ´The Rock´ Johnson', 'Actor Popular Estadounidense')">Dwayne Johnson</button>
+                <button class="btn-predefinido" onclick="agregarPredefinida('https://images.adsttc.com/media/images/669e/7265/c8b7/c809/c2d7/555d/medium_jpg/the-urbanism-of-tegucigalpa-how-modernist-planning-shaped-hondurass-capital_11.jpg?1721660096', 'Honduras', 'Pais Centroamericano Y Hogar A Mas De 5M de Personas')">Honduras</button>
+                <button class="btn-predefinido" onclick="agregarPredefinida('https://diariocatolico.press/wp-content/uploads/2022/06/San-Marcelino-3.jpg', 'Marcelino Champagnat', 'Fundador de la organizacion marista, fuente de inspiracion y amor a muchos')">Marcelino</button>
+                <button class="btn-predefinido" onclick="agregarPredefinida('https://upload.wikimedia.org/wikipedia/commons/8/81/World_Trade_Center_San_Salvador.jpg', 'El Salvador', 'Pais Centroamericano Cuyo Plato Tipico Son Las Pupusas; es bonito.')">El Salvador</button>
+            </div>
+
+            <div id="mensajeError" class="mensaje-error"></div>
+            <div id="mensajeExito" class="mensaje-exito"></div>
+        </div>
+
+        <div id="galeria" class="galeria">
+            <div class="estado-vacio">
+                <div style="font-size: 4em; margin-bottom: 20px; opacity: 0.3;">Sin imágenes</div>
+                <p>Tu galería está vacía</p>
+                <p style="font-size: 0.9em; margin-top: 10px;">Agrega algunas imágenes para comenzar</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let contadorImagenes = 0;
+        let galeriaElement = document.getElementById('galeria');
+
+        function mostrarMensaje(mensaje, esError = false) {
+            const elementoError = document.getElementById('mensajeError');
+            const elementoExito = document.getElementById('mensajeExito');
+            
+            if (esError) {
+                elementoError.textContent = mensaje;
+                elementoError.style.display = 'block';
+                elementoExito.style.display = 'none';
+                setTimeout(() => {
+                    elementoError.style.display = 'none';
+                }, 3000);
+            } else {
+                elementoExito.textContent = mensaje;
+                elementoExito.style.display = 'block';
+                elementoError.style.display = 'none';
+                setTimeout(() => {
+                    elementoExito.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function validarUrl(url) {
+            const extensiones = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
+            const patron = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+            
+            return patron.test(url) && (extensiones.test(url) || url.includes('unsplash.com') || url.includes('images.') || url.includes('img.'));
+        }
+
+        function agregarImagen() {
+            const inputUrl = document.getElementById('urlImagen');
+            const inputTitulo = document.getElementById('tituloImagen');
+            const inputDescripcion = document.getElementById('descripcionImagen');
+
+            const url = inputUrl.value.trim();
+            const titulo = inputTitulo.value.trim();
+            const descripcion = inputDescripcion.value.trim();
+
+            if (!url) {
+                mostrarMensaje('Ingresa URL válida', true);
+                return;
+            }
+
+            if (!titulo) {
+                mostrarMensaje('Ingresa título para imagen', true);
+                return;
+            }
+
+            if (!validarUrl(url)) {
+                mostrarMensaje('URL no es válida. ASEGURESE QUE TERMINE EN .png/.jpg/etc', true);
+                return;
+            }
+
+            crearTarjetaImagen(url, titulo, descripcion);
+
+            inputUrl.value = '';
+            inputTitulo.value = '';
+            inputDescripcion.value = '';
+
+            mostrarMensaje('Imagen agregada exitosamente');
+        }
+
+        function agregarPredefinida(url, titulo, descripcion) {
+            crearTarjetaImagen(url, titulo, descripcion);
+            mostrarMensaje('Imagen predefinida agregada');
+        }
+
+        function crearTarjetaImagen(url, titulo, descripcion) {
+            const estadoVacio = galeriaElement.querySelector('.estado-vacio');
+            if (estadoVacio) {
+                estadoVacio.style.display = 'none';
+            }
+
+            const tarjeta = document.createElement('div');
+            tarjeta.classList.add('tarjeta-imagen');
+            tarjeta.setAttribute('data-id', `imagen-${contadorImagenes++}`);
+
+            const contenedorImagen = document.createElement('div');
+            contenedorImagen.classList.add('envoltura-imagen');
+
+            const imagen = document.createElement('img');
+            imagen.setAttribute('src', url);
+            imagen.setAttribute('alt', titulo);
+            imagen.setAttribute('loading', 'lazy');
+
+            const contenidoTarjeta = document.createElement('div');
+            contenidoTarjeta.classList.add('contenido-tarjeta');
+
+            const tituloTarjeta = document.createElement('h3');
+            tituloTarjeta.classList.add('titulo-tarjeta');
+            tituloTarjeta.textContent = titulo;
+
+            const descripcionTarjeta = document.createElement('p');
+            descripcionTarjeta.classList.add('descripcion-tarjeta');
+            descripcionTarjeta.textContent = descripcion || 'Sin descripción';
+
+            const botonEliminar = document.createElement('button');
+            botonEliminar.classList.add('btn-eliminar');
+            botonEliminar.textContent = 'Eliminar';
+            botonEliminar.addEventListener('click', () => eliminarImagen(tarjeta));
+
+            imagen.addEventListener('error', () => {
+                imagen.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMjUgNzVMMTc1IDEyNUwxMjUgMTc1SDc1TDEyNSA3NVoiIGZpbGw9IiNEMUQ1REIiLz4KPHN2ZyB4PSI3NSIgeT0iODciIHdpZHRoPSIxNTAiIGhlaWdodD0iMjYiPgo8dGV4dCB4PSI3NSIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2QjczODAiPkVycm9yIGFsIGNhcmdhciBpbWFnZW48L3RleHQ+Cjwvc3ZnPgo=';
+                imagen.alt = 'Error al cargar la imagen';
+            });
+
+            contenedorImagen.appendChild(imagen);
+            contenidoTarjeta.appendChild(tituloTarjeta);
+            contenidoTarjeta.appendChild(descripcionTarjeta);
+            contenidoTarjeta.appendChild(botonEliminar);
+            tarjeta.appendChild(contenedorImagen);
+            tarjeta.appendChild(contenidoTarjeta);
+
+            galeriaElement.appendChild(tarjeta);
+        }
+
+        function eliminarImagen(tarjeta) {
+            tarjeta.remove();
+            
+            const tarjetasRestantes = galeriaElement.querySelectorAll('.tarjeta-imagen');
+            if (tarjetasRestantes.length === 0) {
+                const estadoVacio = galeriaElement.querySelector('.estado-vacio');
+                if (!estadoVacio) {
+                    const nuevoEstadoVacio = document.createElement('div');
+                    nuevoEstadoVacio.classList.add('estado-vacio');
+                    nuevoEstadoVacio.innerHTML = `
+                        <div style="font-size: 3em; margin-bottom: 15px; opacity: 0.3;">Sin imágenes</div>
+                        <p>Tu galería está vacía</p>
+                        <p style="font-size: 0.9em; margin-top: 8px;">Agrega algunas imágenes para comenzar</p>
+                    `;
+                    galeriaElement.appendChild(nuevoEstadoVacio);
+                }
+            }
+            
+            mostrarMensaje('Imagen eliminada correctamente');
+        }
+
+        document.getElementById('descripcionImagen').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                agregarImagen();
+            }
+        });
+    </script>
+</body>
+</html>
